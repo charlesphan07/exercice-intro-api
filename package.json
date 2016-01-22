@@ -1,9 +1,22 @@
 {
-    "name": "node-api",
-    "main": "server.js",
-    "dependencies": {
-        "express": "~4.0.0",
-        "mongoose": "~3.6.13",
-        "body-parser": "~1.0.1"
-    }
+  "name": "node-api",
+  "version": "0.1.5",
+  "description": "Exercice d'initiation aux API sur node.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ejs": "2.3.3",
+    "express": "4.13.3",
+     "mongoose": "~3.6.13",
+     "body-parser": "~1.0.1"
+  },
+  "engines": {
+    "node": "0.12.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gti525/exercice-intro-api.git"
+  }
 }
