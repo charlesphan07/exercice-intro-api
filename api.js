@@ -1,9 +1,11 @@
 var express    = require('express');
 var app        = express(); 
 var bodyParser = require('body-parser');
+var path = require('path');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static(__dirname + '/public')); 
 
 var port = process.env.PORT || 8080;
 
@@ -29,8 +31,6 @@ var router = express.Router();
 
 // Routeur qui reçoit tous les messages et les route à l'endroit approprié
 router.use(function(req, res, next) {
-    // do logging
-    console.log('Message reçu.');
     next(); // Continue à la route
 });
 
@@ -48,7 +48,7 @@ router.route('/etudiants')
     //obtenir tous les étudiants
     .get(function(req, res) {
         var Query = Etudiant.find();
-        Query.select('-_id -message');
+        Query.select('-_id');
         Query.exec(function (err, etudiants) {
         if (err) throw err;
             res.send(etudiants);
@@ -76,7 +76,7 @@ router.route("/etudiant")
     });
 
 router.route("/etudiant/:code")  //Prend le code permanent dans l'URL. Ex. /etudiant/BOIE10101010
-//Obtenir un seul étudiant
+    //Obtenir un seul étudiant
     .get(function(req, res) {
         Etudiant.find({'code':req.params.code}, function(err, etudiant) {
             if (err)
@@ -86,7 +86,7 @@ router.route("/etudiant/:code")  //Prend le code permanent dans l'URL. Ex. /etud
     });
 
 router.route("/etudiant/:id")
-//Modifier le message d'un étudiant
+    //Modifier le message d'un étudiant
     .put(function(req, res) {
         Etudiant.findById(req.params.id, function(err, etudiant) {
 
@@ -108,6 +108,11 @@ router.route("/etudiant/:id")
 
 //Enregistre les routes d'API pour qu'elles soient accessibles sur /api
 app.use('/api', router);
+
+// Page de présentation des messages
+app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname, '/public', 'index.html'));
+});
 
 // Démarrer le serveur
 app.listen(port);

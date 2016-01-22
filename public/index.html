@@ -1,0 +1,40 @@
+<!doctype html>
+
+<html ng-app="messages">
+<head>
+    <!-- META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+    <title>Exercice sur les APIs REST</title>
+
+    <!-- SCROLLS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
+    <style>
+        html                    { overflow-y:scroll; }
+        body                    { padding-top:50px; }
+        #todo-list              { margin-bottom:30px; }
+    </style>
+
+    <!-- SPELLS -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+    <script src="core.js"></script>
+
+</head>
+<body ng-controller="mainController">
+    <div class="container">
+        <h1>Les messages des {{ etudiants.length }} étudiants de GTI525</h1>
+        <div id="etudiants-list" class="row">
+                <!-- Pour chaque étudiant retourné par l'API -->
+                <div class="checkbox" ng-repeat="etudiant in etudiants" >
+                    <label>
+                        {{ etudiant.prenom }} {{ etudiant.nom }} : {{ etudiant.message }}
+                    </label>
+                </div>
+
+            </div>
+    </div>
+
+</body>
+</html>
