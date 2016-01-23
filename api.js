@@ -30,8 +30,8 @@ var Etudiant = require('./models/etudiant');
 var router = express.Router();
 
 // Routeur qui reçoit tous les messages et les route à l'endroit approprié
-router.use(function(req, res, next) {
-    next(); // Continue à la route
+router.use(function(req, res, next) 
+{    next(); // Continue à la route
 });
 
 
@@ -67,9 +67,10 @@ router.route("/etudiant")
 
         // sauvegarde l'étudiant à la BD
         etudiant.save(function(err) {
-            if (err)
+            if (err){
                 res.send(err);
-
+                return;
+            }
             res.json({ message: 'Étudiant ajouté' });
         });
         
@@ -79,8 +80,10 @@ router.route("/etudiant/:code")  //Prend le code permanent dans l'URL. Ex. /etud
     //Obtenir un seul étudiant
     .get(function(req, res) {
         Etudiant.find({'code':req.params.code}, function(err, etudiant) {
-            if (err)
+            if (err){
                 res.send(err);
+                return;
+            }
             res.json(etudiant);
         });
     });
@@ -90,15 +93,17 @@ router.route("/etudiant/:id")
     .put(function(req, res) {
         Etudiant.findById(req.params.id, function(err, etudiant) {
 
-            if (err)
+            if (err){
                 res.send(err);
-
+                return;
+            }
             etudiant.message = req.body.message;
 
             etudiant.save(function(err) {
-                if (err)
+                if (err){
                     res.send(err);
-
+                    return;
+                }
                 res.json({ message: 'Message ajouté!' });
             });
         });
