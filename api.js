@@ -10,9 +10,7 @@ app.use(express.static(__dirname + '/public'));
 var port = process.env.PORT || 8080;
 
 var mongoose   = require('mongoose');
-var uri = 
-  process.env.MONGOLAB_URI || 
-  'mongodb://test:test@ds031872.mongolab.com:31872/demomango';
+var uri = process.env.MONGOLAB_URI;
 
 mongoose.connect(uri, function (err, res) {
   if (err) { 
