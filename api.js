@@ -53,7 +53,8 @@ router.route('/etudiants')
         });
     });
 
-
+/*
+Route désactivée pour la version en installation
 router.route("/etudiant")
     // Ajouter un étudiant
     .post(function(req, res) {
@@ -73,6 +74,7 @@ router.route("/etudiant")
         });
         
     });
+*/
 
 router.route("/etudiant/:code")  //Prend le code permanent dans l'URL. Ex. /etudiant/BOIE10101010
     //Obtenir un seul étudiant
@@ -112,7 +114,7 @@ router.route("/etudiant/:id")
 //Enregistre les routes d'API pour qu'elles soient accessibles sur /api
 app.use('/api', router);
 
-// Page de présentation des messages
+// Page Angular de présentation des messages
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, '/public', 'index.html'));
 });
