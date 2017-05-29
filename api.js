@@ -10,7 +10,9 @@ app.use(express.static(__dirname + '/public'));
 var port = process.env.PORT || 8080;
 
 var mongoose   = require('mongoose');
-var uri = process.env.MONGOLAB_URI;
+var uri = 
+  process.env.MONGOLAB_URI || 
+  'mongodb://test:test@ds031872.mongolab.com:31872/demomango';
 
 mongoose.connect(uri, function (err, res) {
   if (err) { 
@@ -19,6 +21,8 @@ mongoose.connect(uri, function (err, res) {
     console.log ('Connexion réussie à la BD' + uri);
   }
 });
+
+var fonctions = require('./scripts/fonctions.js');
 
 var Etudiant = require('./models/etudiant');
 
@@ -48,14 +52,14 @@ router.route('/etudiants')
         var Query = Etudiant.find().sort({'nom':1});
         Query.select('-_id');
         Query.exec(function (err, etudiants) {
-        if (err) throw err;
+            if (err) throw err;
             res.send(etudiants);
         });
     });
 
 /*
 Route désactivée pour la version en installation
-router.route("/etudiant")
+router.route("/etudiants")
     // Ajouter un étudiant
     .post(function(req, res) {
         
@@ -67,7 +71,7 @@ router.route("/etudiant")
         // sauvegarde l'étudiant à la BD
         etudiant.save(function(err) {
             if (err){
-                res.send(err);
+                res.status(500).json({ erreur: 'Erreur lors de l\'enregistrement à la BD' });
                 return;
             }
             res.json({ message: 'Étudiant ajouté' });
@@ -76,7 +80,7 @@ router.route("/etudiant")
     });
 */
 
-router.route("/etudiant/:code")  //Prend le code permanent dans l'URL. Ex. /etudiant/BOIE10101010
+router.route("/etudiants/:code")  //Prend le code permanent dans l'URL. Ex. /etudiant/BOIE10101010
     //Obtenir un seul étudiant
     .get(function(req, res) {
         Etudiant.find({'code':req.params.code}, function(err, etudiant) {
@@ -88,24 +92,71 @@ router.route("/etudiant/:code")  //Prend le code permanent dans l'URL. Ex. /etud
         });
     });
 
-router.route("/etudiant/:id")
-    //Modifier le message d'un étudiant
+router.route("/etudiants/:id")
+    //Afficher un étudiant et son message
     .put(function(req, res) {
         Etudiant.findById(req.params.id, function(err, etudiant) {
 
             if (err){
-                res.send(err);
+                res.status(500).json({ erreur: 'Erreur lors de la lecture dans la BD' });
                 return;
             }
+
+            if(req.body.message == null){
+                res.status(400).json({ erreur: 'Le message doit être fourni dans le corps de la requête' });
+                return;
+            }
+
             etudiant.message = req.body.message;
 
             etudiant.save(function(err) {
                 if (err){
-                    res.send(err);
+                    res.status(500).json({ erreur: 'Erreur lors de l\'enregistrement à la BD' });
                     return;
                 }
                 res.json({ message: 'Message ajouté!' });
             });
+        });
+    });
+
+
+router.route("/etudiants/:id/soumettreAPI")
+    //Soumettre l'URL d'un API qui fournira le message
+    .post(function(req, res) {
+        Etudiant.findById(req.params.id, function(err, etudiant) {
+
+            if (err){
+                res.status(500).json({ erreur: 'Erreur lors de la lecture dans la BD' });
+                return;
+            }
+
+            fonctions.getContent(req.body.hyperlien)
+              .then((html) => {
+                    console.log(html);
+
+                    try{
+                      //Lecture du contenu de la réponse à l'appel à l'API externe
+                      var jsonMessage = JSON.parse(html);  
+                      //Remplacement par la valeur de l'API
+                      etudiant.message = jsonMessage.message;
+                      etudiant.hyperlien = req.body.hyperlien;
+                    }catch (formatException) {
+                        res.status(400).json({ erreur: 'Le message retourné par l\'API fourni n\'est pas formatté correctement' });
+                        return;
+                    }
+
+                    etudiant.save(function(erreurSauvegarde) {
+                        if (erreurSauvegarde){
+                            res.status(500).json({ erreur: 'Erreur lors de l\'enregistrement à la BD' });
+                            return;
+                        }
+                        res.json({ message: 'Message obtenu de l\'API et a été enregistré!' });
+                    });
+                })
+              .catch((err) => {
+                    console.error(err.stack);
+                    res.status(404).json({ erreur: 'L\'URL fourni dans le champ hyperlien est invalide' });
+                }); 
         });
     });
 
@@ -119,6 +170,6 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, '/public', 'index.html'));
 });
 
-// Démarrer le serveur
+// Démarre le serveur
 app.listen(port);
 console.log('Serveur démarré sur le port ' + port);

@@ -9,4 +9,6 @@ var EtudiantSchema  = new Schema({
     hyperlien: String
 });
 
-module.exports = mongoose.model('Etudiant', EtudiantSchema);
+var Etudiant = mongoose.model('Etudiant', EtudiantSchema);
+
+module.exports = Etudiant;
