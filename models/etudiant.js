@@ -5,7 +5,8 @@ var EtudiantSchema  = new Schema({
     code: String,
     nom: String,
     prenom: String,
-    message: String
+    message: String,
+    hyperlien: String
 });
 
 module.exports = mongoose.model('Etudiant', EtudiantSchema);

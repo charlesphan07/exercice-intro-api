@@ -39,6 +39,7 @@ fs.readFile('./models/etudiants.csv', function (err, fichierEtudiants) {
 	for(var i=0;i<etudiants.length;i++){
 		var etudiant = JSON.parse(etudiants[i]);
 		etudiant["message"] = '';
+    etudiant["hyperlien"] = '';
  		Etudiant.collection.insert(etudiant);
     }
     console.log("Chargement terminé");
