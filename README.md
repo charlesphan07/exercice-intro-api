@@ -6,7 +6,7 @@ La technologie utilisée est la pile logicielle JavaScript MEAN, soit MongoDB, E
 
 ## Prérequis
 * Installation de l'environnement node.js
-  Voir https://openclassrooms.com/courses/des-applications-ultra-rapides-avec-node-js/installer-node-js pour des instruction pour Windows, Mac ou Linux
+  Voir https://openclassrooms.com/courses/des-applications-ultra-rapides-avec-node-js/installer-node-js pour des instructions pour Windows, Mac ou Linux
   
 * Exécuter la commande `npm install` 
 
