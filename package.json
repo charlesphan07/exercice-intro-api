@@ -2,9 +2,9 @@
   "name": "node-api",
   "version": "0.1.5",
   "description": "Exercice d'initiation aux API sur node.js",
-  "main": "server.js",
+  "main": "api.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node api.js"
   },
   "dependencies": {
     "ejs": "2.3.3",
